@@ -1,0 +1,650 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Simple Music Player</title>
+  <!-- Load FontAwesome icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+
+  <!-- Load the custom CSS style file -->
+  <style>
+    body {
+      background-color: lightgreen;
+
+      /* Smoothly transition the background color */
+      transition: background-color .5s;
+    }
+
+    /* Using flex with the column direction to
+align items in a vertical direction */
+    .player {
+      height: 95vh;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .details {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+      margin-top: 25px;
+    }
+
+    .track-art {
+      margin: 25px;
+      height: 250px;
+      width: 250px;
+      background-image: URL("https://source.unsplash.com/Qrspubmx6kE/640x360");
+      background-size: cover;
+      background-position: center;
+      border-radius: 15%;
+    }
+
+    /* Changing the font sizes to suitable ones */
+    .now-playing {
+      font-size: 1rem;
+    }
+
+    .track-name {
+      font-size: 3rem;
+    }
+
+    .track-artist {
+      font-size: 1.5rem;
+    }
+
+    /* Using flex with the row direction to
+align items in a horizontal direction */
+    .buttons {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .playpause-track,
+    .prev-track,
+    .next-track {
+      padding: 25px;
+      opacity: 0.8;
+
+      /* Smoothly transition the opacity */
+      transition: opacity .2s;
+    }
+
+    /* Change the opacity when mouse is hovered */
+    .playpause-track:hover,
+    .prev-track:hover,
+    .next-track:hover {
+      opacity: 1.0;
+    }
+
+    /* Define the slider width so that it scales properly */
+    .slider_container {
+      width: 75%;
+      max-width: 400px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Modify the appearance of the slider */
+    .seek_slider,
+    .volume_slider {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      height: 5px;
+      background: black;
+      opacity: 0.7;
+      -webkit-transition: .2s;
+      transition: opacity .2s;
+    }
+
+    /* Modify the appearance of the slider thumb */
+    .seek_slider::-webkit-slider-thumb,
+    .volume_slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      width: 15px;
+      height: 15px;
+      background: white;
+      cursor: pointer;
+      border-radius: 50%;
+    }
+
+    /* Change the opacity when mouse is hovered */
+    .seek_slider:hover,
+    .volume_slider:hover {
+      opacity: 1.0;
+    }
+
+    .seek_slider {
+      width: 60%;
+    }
+
+    .volume_slider {
+      width: 30%;
+    }
+
+    .current-time,
+    .total-duration {
+      padding: 10px;
+    }
+
+    i.fa-volume-down,
+    i.fa-volume-up {
+      padding: 10px;
+    }
+
+    /* Change the mouse cursor to a pointer
+when hovered over */
+    i.fa-play-circle,
+    i.fa-pause-circle,
+    i.fa-step-forward,
+    i.fa-step-backward {
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="player">
+
+    <!-- Define the section for displaying details -->
+    <div class="details">
+        <!-- <div class="now-playing">PLAYING x OF y</div>
+        <div class="track-art"></div>
+        <div class="track-name">Track Name</div>
+        <div class="track-artist">Track Artist</div> -->
+        <div>
+          <div id="b">
+          <i va="35.144">Hồn </i>
+          <i va="35.587997">lỡ </i>
+          <i va="36.006">sa </i>
+          <i va="36.475998">vào </i>
+          <i va="36.972">đôi </i>
+          <i va="37.495">mắt </i>
+          <i va="37.939">em</i>
+          </div>
+          <div id="b">
+          <i va="42.641">Chiều </i>
+          <i va="43.085">nao </i>
+          <i va="43.476997">xõa </i>
+          <i va="43.869">tóc </i>
+          <i va="44.443">ngồi </i>
+          <i va="45.017998">bên </i>
+          <i va="45.488">rèm</i>
+          </div>
+          <div id="b">
+          <i va="49.276">Thầm </i>
+          <i va="49.694">ước </i>
+          <i va="50.059998">nhưng </i>
+          <i va="50.503998">nào </i>
+          <i va="51.026">đâu </i>
+          <i va="51.575">dám </i>
+          <i va="52.097">nói</i>
+          </div>
+          <div id="b">
+          <i va="53.325">Khép </i>
+          <i va="53.769">tâm </i>
+          <i va="54.37">tư </i>
+          <i va="54.971">lại </i>
+          <i va="55.415">thôi</i>
+          </div>
+          <div id="b">
+          <i va="56.669">Đường </i>
+          <i va="57.139">hoa </i>
+          <i va="57.766">vẫn </i>
+          <i va="57.922">chưa </i>
+          <i va="58.471">mở </i>
+          <i va="58.940998">lối</i>
+          </div>
+          <div id="b">
+          <i va="62.572">Đời </i>
+          <i va="63.042">lắm </i>
+          <i va="63.408">phong </i>
+          <i va="63.8">trần </i>
+          <i va="64.34901">tay </i>
+          <i va="64.949005">trắng </i>
+          <i va="65.289">tay</i>
+          </div>
+          <div id="b">
+          <i va="69.26">Trời </i>
+          <i va="69.73">đông </i>
+          <i va="70.122">ngại </i>
+          <i va="70.513">gió </i>
+          <i va="71.036">lùa </i>
+          <i va="71.637">vai </i>
+          <i va="72.133">gầy</i>
+          </div>
+          <div id="b">
+          <i va="75.973">Lầu </i>
+          <i va="76.39101">kín </i>
+          <i va="76.783005">trăng </i>
+          <i va="77.149">về </i>
+          <i va="77.723">không </i>
+          <i va="78.272">lối </i>
+          <i va="78.768005">chiếu</i>
+          </div>
+          <div id="b">
+          <i va="80.100006">Gác </i>
+          <i va="80.518005">cao </i>
+          <i va="81.171005">ngăn </i>
+          <i va="81.746">niềm </i>
+          <i va="82.269005">yêu</i>
+          </div>
+          <div id="b">
+          <i va="83.444">Thì </i>
+          <i va="83.888">thôi </i>
+          <i va="84.515">mơ </i>
+          <i va="84.672005">ước </i>
+          <i va="85.168">chi </i>
+          <i va="85.769005">nhiều</i>
+          </div>
+          <div id="b">
+          <i va="91.411">Bên </i>
+          <i va="92.117004">nhau </i>
+          <i va="93.292">sao </i>
+          <i va="93.815">tình </i>
+          <i va="94.416">xa </i>
+          <i va="95.042">vạn </i>
+          <i va="95.539">lý </i>
+          <i va="96.740005">cách </i>
+          <i va="97.263">biệt </i>
+          <i va="97.838005">mấy </i>
+          <i va="98.491005">sơn </i>
+          <i va="98.935005">khê</i>
+          </div>
+          <div id="b">
+          <i va="101.233">Ngày </i>
+          <i va="102.148">đi </i>
+          <i va="103.34901">mắt </i>
+          <i va="103.767006">em </i>
+          <i va="104.473">xanh </i>
+          <i va="105.126">biển </i>
+          <i va="105.596">sâu, </i>
+          <i va="106.719">mắt </i>
+          <i va="107.137">tôi </i>
+          <i va="107.921005">rưng </i>
+          <i va="108.469">rưng </i>
+          <i va="108.913">sầu</i>
+          </div>
+          <div id="b">
+          <i va="110.455">Lặng </i>
+          <i va="111.108">nghe </i>
+          <i va="111.709">tiếng </i>
+          <i va="112.205">pháo </i>
+          <i va="112.962006">tiễn </i>
+          <i va="113.824005">ai </i>
+          <i va="114.582">qua </i>
+          <i va="114.922005">cầu</i>
+          </div>
+          <div id="b">
+          <i va="115.496">Đường </i>
+          <i va="116.228004">phố </i>
+          <i va="116.72401">muôn </i>
+          <i va="117.064">màu </i>
+          <i va="117.534004">sao </i>
+          <i va="118.082">thiếu </i>
+          <i va="118.579">em</i>
+          </div>
+          <div id="b">
+          <i va="122.628006">Về </i>
+          <i va="123.046005">đâu </i>
+          <i va="123.464005">làn </i>
+          <i va="123.882">tóc </i>
+          <i va="124.404">xõa </i>
+          <i va="124.979004">bên </i>
+          <i va="125.449005">rèm</i>
+          </div>
+          <div id="b">
+          <i va="129.263">Lầu </i>
+          <i va="129.707">vắng </i>
+          <i va="130.073">không </i>
+          <i va="130.464">người </i>
+          <i va="131.118">song </i>
+          <i va="131.666">khép </i>
+          <i va="132.18901">kín</i>
+          </div>
+          <div id="b">
+          <i va="133.46901">Nhớ </i>
+          <i va="133.91301">em </i>
+          <i va="134.461">tôi </i>
+          <i va="135.088">gọi </i>
+          <i va="135.584">tên, </i>
+          <i va="136.70801">chỉ </i>
+          <i va="137.20401">nghe </i>
+          <i va="137.85701">tiếng </i>
+          <i va="138.171">lá </i>
+          <i va="139.059">rơi </i>
+          <i va="139.58101">thềm</i>
+          </div>
+          <div id="b">
+          <i va="168.10701">Bên </i>
+          <i va="169.021">nhau </i>
+          <i va="170.06601">sao </i>
+          <i va="170.48401">tình </i>
+          <i va="171.11101">xa </i>
+          <i va="171.738">vạn </i>
+          <i va="172.20801">lý </i>
+          <i va="173.358">cách </i>
+          <i va="173.828">biệt </i>
+          <i va="174.429">mấy </i>
+          <i va="175.134">sơn </i>
+          <i va="175.552">khê</i>
+          </div>
+          <div id="b">
+          <i va="177.981">Ngày </i>
+          <i va="178.713">đi </i>
+          <i va="180.019">mắt </i>
+          <i va="180.489">em </i>
+          <i va="181.09">xanh </i>
+          <i va="181.743">biển </i>
+          <i va="182.161">sâu, </i>
+          <i va="183.389">mắt </i>
+          <i va="183.83301">tôi </i>
+          <i va="184.46">rưng </i>
+          <i va="185.087">rưng </i>
+          <i va="185.531">sầu</i>
+          </div>
+          <div id="b">
+          <i va="187.15001">Lặng </i>
+          <i va="187.856">nghe </i>
+          <i va="188.378">tiếng </i>
+          <i va="188.639">pháo </i>
+          <i va="189.031">tiễn </i>
+          <i va="189.58">ai </i>
+          <i va="189.97101">qua </i>
+          <i va="191.878">cầu</i>
+          </div>
+          <div id="b">
+          <i va="192.479">Đường </i>
+          <i va="192.949">phố </i>
+          <i va="193.472">muôn </i>
+          <i va="193.864">màu </i>
+          <i va="194.464">sao </i>
+          <i va="195.039">thiếu </i>
+          <i va="195.536">em</i>
+          </div>
+          <div id="b">
+          <i va="199.271">Về </i>
+          <i va="199.68901">đâu </i>
+          <i va="200.133">làn </i>
+          <i va="200.52501">tóc </i>
+          <i va="201.047">xõa </i>
+          <i va="201.62201">bên </i>
+          <i va="202.144">rèm</i>
+          </div>
+          <div id="b">
+          <i va="205.932">Lầu </i>
+          <i va="206.35">vắng </i>
+          <i va="206.742">không </i>
+          <i va="207.108">người </i>
+          <i va="207.709">song </i>
+          <i va="208.336">khép </i>
+          <i va="208.806">kín</i>
+          </div>
+          <div id="b">
+          <i va="210.033">Nhớ </i>
+          <i va="210.478">em </i>
+          <i va="211.104">tôi </i>
+          <i va="211.627">gọi </i>
+          <i va="212.149">tên, </i>
+          <i va="213.429">chỉ </i>
+          <i va="213.90001">nghe </i>
+          <i va="214.709">tiếng </i>
+          <i va="215.284">lá </i>
+          <i va="215.493">rơi </i>
+          <i va="215.83301">thềm</i>
+          </div>
+          <div id="b">
+          <i va="219.307">Lầu </i>
+          <i va="219.699">vắng </i>
+          <i va="220.117">không </i>
+          <i va="220.535">người </i>
+          <i va="221.162">song </i>
+          <i va="221.684">khép </i>
+          <i va="222.233">kín</i>
+          </div>
+          <div id="b">
+          <i va="223.513">Nhớ </i>
+          <i va="223.904">em </i>
+          <i va="224.558">tôi </i>
+          <i va="225.184">gọi </i>
+          <i va="225.602">tên, </i>
+          <i va="226.935">chỉ </i>
+          <i va="229.05101">nghe </i>
+          <i va="232.96901">tiếng </i>
+          <i va="234.06601">lá </i>
+          <i va="235.13701">rơi </i>
+          <i va="236.522">thềm</i>
+          </div>
+        </div>
+   
+        </div>
+
+    <!-- Define the section for displaying track buttons -->
+    <div class="buttons">
+      <div class="prev-track">
+        <i class="fa fa-step-backward fa-2x"></i>
+      </div>
+      <div class="playpause-track"  (click)="play()">
+        <!-- <button (click)="clickEvent()"> Click Me</button> -->
+        <i class="fa fa-play-circle fa-5x"></i>
+      </div>
+      <div class="next-track" >
+        <i class="fa fa-step-forward fa-2x"></i>
+      </div>
+    </div>
+
+    <!-- Define the section for displaying the seek slider-->
+    <div class="slider_container">
+      <div class="current-time">{{duration}}</div><br>
+      <input type="range" min="0" max="{{duration}}"class="seek_slider"  [value]="seek" (input)="setSeekTo($event)">
+      <div class="total-duration">{{duration}}</div>
+    </div>
+
+    <!-- Define the section for displaying the volume slider-->
+    <div class="slider_container">
+      <i class="fa fa-volume-down"></i>
+      <input type="range" min="0" max="1" step="0.01"  class="volume_slider" value="0.1" (input)="setvolume($event)">
+      <i class="fa fa-volume-up"></i>
+    </div>
+  </div>
+
+  <!-- Load the main script for the player -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+
+  <!-- <script>
+    let now_playing = document.querySelector(".now-playing");
+    let track_art = document.querySelector(".track-art");
+    let track_name = document.querySelector(".track-name");
+    let track_artist = document.querySelector(".track-artist");
+
+    let playpause_btn = document.querySelector(".playpause-track");
+    let next_btn = document.querySelector(".next-track");
+    let prev_btn = document.querySelector(".prev-track");
+
+    let seek_slider = document.querySelector(".seek_slider");
+    let volume_slider = document.querySelector(".volume_slider");
+    let curr_time = document.querySelector(".current-time");
+    let total_duration = document.querySelector(".total-duration");
+
+    // Specify globally used values
+    let track_index = 0;
+    let isPlaying = false;
+    let updateTimer;
+
+    // Create the audio element for the player
+    let curr_track = document.createElement('audio');
+
+    // Define the list of tracks that have to be played
+    let track_list = [
+      {
+        name: "Night Owl",
+        artist: "Broke For Free",
+        image: "Image URL",
+        path: "Night_Owl.mp3"
+      },
+      {
+        name: "Enthusiast",
+        artist: "Tours",
+        image: "Image URL",
+        path: "Enthusiast.mp3"
+      },
+      {
+        name: "Shipping Lanes",
+        artist: "Chad Crouch",
+        image: "Image URL",
+        path: "Shipping_Lanes.mp3",
+      },
+    ];
+    function loadTrack(track_index) {
+      // Clear the previous seek timer
+      clearInterval(updateTimer);
+      resetValues();
+
+      // Load a new track
+      curr_track.src = track_list[track_index].path;
+      curr_track.load();
+
+      // Update details of the track
+      track_art.style.backgroundImage =
+        "url(" + track_list[track_index].image + ")";
+      track_name.textContent = track_list[track_index].name;
+      track_artist.textContent = track_list[track_index].artist;
+      now_playing.textContent =
+        "PLAYING " + (track_index + 1) + " OF " + track_list.length;
+
+      // Set an interval of 1000 milliseconds
+      // for updating the seek slider
+      updateTimer = setInterval(seekUpdate, 1000);
+
+      // Move to the next track if the current finishes playing
+      // using the 'ended' event
+      curr_track.addEventListener("ended", nextTrack);
+
+      // Apply a random background color
+      random_bg_color();
+    }
+
+    function random_bg_color() {
+      // Get a random number between 64 to 256
+      // (for getting lighter colors)
+      let red = Math.floor(Math.random() * 256) + 64;
+      let green = Math.floor(Math.random() * 256) + 64;
+      let blue = Math.floor(Math.random() * 256) + 64;
+
+      // Construct a color with the given values
+      let bgColor = "rgb(" + red + ", " + green + ", " + blue + ")";
+
+      // Set the background to the new color
+      document.body.style.background = bgColor;
+    }
+
+    // Function to reset all values to their default
+    function resetValues() {
+      curr_time.textContent = "00:00";
+      total_duration.textContent = "00:00";
+      seek_slider.value = 0;
+    }
+    function playpauseTrack() {
+      console.log(1222);
+      // Switch between playing and pausing
+      // depending on the current state
+      // if (!isPlaying) playTrack();
+      // else pauseTrack();
+    }
+
+    function playTrack() {
+      // Play the loaded track
+      curr_track.play();
+      isPlaying = true;
+
+      // Replace icon with the pause icon
+      playpause_btn.innerHTML = '<i class="fa fa-pause-circle fa-5x"></i>';
+    }
+
+    function pauseTrack() {
+      // Pause the loaded track
+      curr_track.pause();
+      isPlaying = false;
+
+      // Replace icon with the play icon
+      playpause_btn.innerHTML = '<i class="fa fa-play-circle fa-5x"></i>';
+    }
+
+    function nextTrack() {
+      // Go back to the first track if the
+      // current one is the last in the track list
+      if (track_index < track_list.length - 1)
+        track_index += 1;
+      else track_index = 0;
+
+      // Load and play the new track
+      loadTrack(track_index);
+      playTrack();
+    }
+
+    function prevTrack() {
+      // Go back to the last track if the
+      // current one is the first in the track list
+      if (track_index > 0)
+        track_index -= 1;
+      else track_index = track_list.length - 1;
+
+      // Load and play the new track
+      loadTrack(track_index);
+      playTrack();
+    }
+    function seekTo() {
+      // Calculate the seek position by the
+      // percentage of the seek slider
+      // and get the relative duration to the track
+      seekto = curr_track.duration * (seek_slider.value / 100);
+
+      // Set the current track position to the calculated seek position
+      curr_track.currentTime = seekto;
+    }
+
+    function setVolume() {
+      // Set the volume according to the
+      // percentage of the volume slider set
+      curr_track.volume = volume_slider.value / 100;
+    }
+
+    function seekUpdate() {
+      let seekPosition = 0;
+
+      // Check if the current track duration is a legible number
+      if (!isNaN(curr_track.duration)) {
+        seekPosition = curr_track.currentTime * (100 / curr_track.duration);
+        seek_slider.value = seekPosition;
+
+        // Calculate the time left and the total duration
+        let currentMinutes = Math.floor(curr_track.currentTime / 60);
+        let currentSeconds = Math.floor(curr_track.currentTime - currentMinutes * 60);
+        let durationMinutes = Math.floor(curr_track.duration / 60);
+        let durationSeconds = Math.floor(curr_track.duration - durationMinutes * 60);
+
+        // Add a zero to the single digit time values
+        if (currentSeconds < 10) { currentSeconds = "0" + currentSeconds; }
+        if (durationSeconds < 10) { durationSeconds = "0" + durationSeconds; }
+        if (currentMinutes < 10) { currentMinutes = "0" + currentMinutes; }
+        if (durationMinutes < 10) { durationMinutes = "0" + durationMinutes; }
+
+        // Display the updated duration
+        curr_time.textContent = currentMinutes + ":" + currentSeconds;
+        total_duration.textContent = durationMinutes + ":" + durationSeconds;
+      }
+    }
+    // Load the first track in the tracklist
+    loadTrack(track_index);
+
+  </script> -->
+</body>
